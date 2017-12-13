@@ -1,14 +1,13 @@
 package com.example.demo;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-import javax.annotation.PostConstruct;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.domain.Player;
+import com.example.demo.dao.TeamDao;
 import com.example.demo.domain.Team;
 
 /*
@@ -20,19 +19,16 @@ import com.example.demo.domain.Team;
 @RestController
 public class HelloRestController {
 
-	private Team team;
-
-	@PostConstruct
-	public void init() {
-		Set<Player> players = new HashSet<Player>();
-		players.add(new Player("Abhik Talukder", "Striker"));
-		players.add(new Player("Arithra Talukder", "Striker"));
-
-		team = new Team("Toronto", "Blue Jays", "Jay", players);
-	}
+	@Autowired
+	TeamDao teamDao;
 
 	@RequestMapping("/rest")
-	public Team sayHelloToRest(){
-		return team;
+	public List<Team> sayHelloToRest() {
+		return teamDao.findAll();
+	}
+	
+	@RequestMapping("/team/{name}")
+	public Team findTeamByName(@PathVariable String name) {
+		return teamDao.findByName(name);
 	}
 }
